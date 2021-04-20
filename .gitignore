@@ -1,5 +1,8 @@
+.vscode
+**/__pycache__/
 **/bootstrap/**
 /venv
 **/photos/**
+/djangosite/static/admin/**
 
 *.sqlite3
