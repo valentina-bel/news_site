@@ -1,5 +1,5 @@
-/bootstrap
+**/bootstrap/**
 /venv
-/photos
+**/photos/**
 
 *.sqlite3
