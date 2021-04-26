@@ -2,10 +2,10 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView, DeleteView, CreateView
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
-
+from django.contrib import messages
 
 from .models import News, Category
-from .forms import NewsForm
+from .forms import NewsForm, UserRegisterForm
 
 
 class HomeNews(ListView):
@@ -50,3 +50,21 @@ class CreateNews(LoginRequiredMixin, CreateView):
     template_name = 'news/add_news.html'
     login_url = '/admin/'
     # success_url = reverse_lazy('home')
+
+
+def register(request):
+    if request.method == 'POST':
+        form = UserRegisterForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Вы зарегистрированы')
+            return redirect('login')
+        else:
+            messages.error(request, 'Ошибка регистрации')
+    else:
+        form = UserRegisterForm()
+    context = {'form': form}
+    return render(request, 'news/register.html', context)
+
+def login(request):
+    return render(request, 'news/login.html')
