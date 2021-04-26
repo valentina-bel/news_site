@@ -4,6 +4,7 @@ from django.urls import reverse
 # Create your models here.
 
 
+
 class News(models.Model):
     # id automatic
     title = models.CharField(max_length=150, verbose_name='Title')
@@ -13,6 +14,7 @@ class News(models.Model):
     photo = models.ImageField(upload_to='photos/%Y/%m/%d/', null= True, verbose_name='Photo')
     is_published = models.BooleanField(default=True, verbose_name='Published')
     category = models.ForeignKey('Category', on_delete=models.PROTECT, null=True, verbose_name='Category')
+    views = models.IntegerField(default=0)
     # related_name='get_news'
 
     def __str__(self):
