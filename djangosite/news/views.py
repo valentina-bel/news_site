@@ -3,9 +3,10 @@ from django.views.generic import ListView, DeleteView, CreateView
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
+from django.contrib.auth import login, logout
 
 from .models import News, Category
-from .forms import NewsForm, UserRegisterForm
+from .forms import NewsForm, UserRegisterForm, UserLoginForm
 
 
 class HomeNews(ListView):
@@ -56,9 +57,10 @@ def register(request):
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)
         if form.is_valid():
-            form.save()
+            user = form.save()
+            login(request, user)
             messages.success(request, 'Вы зарегистрированы')
-            return redirect('login')
+            return redirect('home')
         else:
             messages.error(request, 'Ошибка регистрации')
     else:
@@ -66,5 +68,18 @@ def register(request):
     context = {'form': form}
     return render(request, 'news/register.html', context)
 
-def login(request):
-    return render(request, 'news/login.html')
+def user_login(request):
+    if request.method == 'POST':
+        form = UserLoginForm(data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+            return redirect('home')
+    else:
+        form = UserLoginForm()
+    context = {'form': form}
+    return render(request, 'news/login.html', context)
+
+def user_logout(request):
+    logout(request)
+    return redirect('login')
